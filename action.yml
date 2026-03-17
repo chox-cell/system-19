@@ -1,0 +1,20 @@
+name: "System-19"
+description: "AI code enforcement layer for Pull Requests"
+author: "System-19"
+
+inputs:
+  github-token:
+    description: "GitHub token"
+    required: true
+  test-status:
+    description: "Optional test status: pass | fail | unknown"
+    required: false
+    default: "unknown"
+
+runs:
+  using: "node20"
+  main: "dist/index.js"
+
+branding:
+  icon: "shield"
+  color: "red"
