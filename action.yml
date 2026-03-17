@@ -10,6 +10,10 @@ inputs:
     description: "Optional test status: pass | fail | unknown"
     required: false
     default: "unknown"
+  comment-mode:
+    description: "pr-comment | log-only"
+    required: false
+    default: "pr-comment"
 
 runs:
   using: "node20"

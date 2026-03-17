@@ -1,0 +1,17 @@
+{
+  "repo": "local/test-repo",
+  "prNumber": 102,
+  "diff": "FILE: src/auth/session.ts\n+const token: any = getToken();",
+  "changedFiles": [
+    "src/auth/session.ts"
+  ],
+  "filePatches": [
+    {
+      "file": "src/auth/session.ts",
+      "patch": "+const token: any = getToken();"
+    }
+  ],
+  "testResults": {
+    "status": "unknown"
+  }
+}

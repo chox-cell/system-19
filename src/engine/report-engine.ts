@@ -3,7 +3,9 @@ import type { ReviewOutput } from "../types/output";
 export function buildReport(output: ReviewOutput): string {
   const issues =
     output.violations.length > 0
-      ? output.violations.map((v) => `- ${v.message} (${v.file})`).join("\n")
+      ? output.violations
+          .map((v) => `- [${v.rule}] ${v.message} (${v.file})`)
+          .join("\n")
       : "- No major issues detected";
 
   const actions =
@@ -12,19 +14,19 @@ export function buildReport(output: ReviewOutput): string {
       : "- No action required";
 
   return [
-    "System-19 Review",
+    "## System-19 Review",
     "",
-    `Decision: ${output.decision}`,
-    `Blessing Score: ${output.blessingScore}`,
+    `**Decision:** ${output.decision}`,
+    `**Blessing Score:** ${output.blessingScore}`,
     "",
-    `Quality: ${output.qualityScore}`,
-    `Risk: ${output.riskScore}`,
-    `Confidence: ${output.confidenceScore}`,
+    `- Quality: ${output.qualityScore}`,
+    `- Risk: ${output.riskScore}`,
+    `- Confidence: ${output.confidenceScore}`,
     "",
-    "Issues Detected:",
+    "### Issues Detected",
     issues,
     "",
-    "Required Actions:",
+    "### Required Actions",
     actions
   ].join("\n");
 }

@@ -1,0 +1,22 @@
+{
+  "repo": "local/test-repo",
+  "prNumber": 101,
+  "diff": "FILE: src/utils/math.ts\n-export function add(a,b){return a+b}\n+export function add(a: number, b: number): number { return a + b; }\n\nFILE: src/utils/math.test.ts\n+it('adds', () => expect(add(1,2)).toBe(3));",
+  "changedFiles": [
+    "src/utils/math.ts",
+    "src/utils/math.test.ts"
+  ],
+  "filePatches": [
+    {
+      "file": "src/utils/math.ts",
+      "patch": "-export function add(a,b){return a+b}\n+export function add(a: number, b: number): number { return a + b; }"
+    },
+    {
+      "file": "src/utils/math.test.ts",
+      "patch": "+it('adds', () => expect(add(1,2)).toBe(3));"
+    }
+  ],
+  "testResults": {
+    "status": "pass"
+  }
+}

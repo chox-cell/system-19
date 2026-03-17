@@ -1,0 +1,17 @@
+{
+  "repo": "local/test-repo",
+  "prNumber": 103,
+  "diff": "FILE: prisma/schema.prisma\n+model User { id String @id }",
+  "changedFiles": [
+    "prisma/schema.prisma"
+  ],
+  "filePatches": [
+    {
+      "file": "prisma/schema.prisma",
+      "patch": "+model User { id String @id }"
+    }
+  ],
+  "testResults": {
+    "status": "pass"
+  }
+}
