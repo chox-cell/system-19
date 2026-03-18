@@ -1,41 +1,60 @@
-# System-19 v0
+# System-19
 
-System-19 is a GitHub-native enforcement layer for AI-generated software changes.
+System-19 is an open-source enforcement layer for AI-generated software changes.
 
-## What it does
-
-- Reviews Pull Requests
-- Applies deterministic policy checks
-- Computes quality, risk, and confidence
-- Returns:
-  - APPROVE
-  - REVISE
-  - BLOCK
-- Publishes a PR comment
-- Publishes a GitHub status check
-- Writes a step summary
-- Generates an audit artifact
-- Syncs PR labels by decision
-- Supports strict mode for blocking workflows
-
-## v0 Scope
-
-- GitHub Action
-- TypeScript-first repositories
-- PR diff analysis
-- Configurable via `.system19.yml`
-- Local fixture-based review runner
-- No auto-fix
-- No auto-merge
-- Human remains final authority
+It runs inside GitHub Pull Requests and can also evaluate external agent-runtime artifacts, helping teams stop unsafe or low-quality changes before merge or release.
 
 ## Core Idea
 
-System-19 does not generate code.
+AI can generate code.
 
-System-19 judges code.
+System-19 decides whether that code is safe.
 
-## Config
+## What System-19 Does
+
+- Reviews Pull Requests automatically
+- Applies deterministic rule-based validation
+- Computes:
+  - Quality Score
+  - Risk Score
+  - Confidence Score
+  - Blessing Score
+- Returns a final decision:
+  - APPROVE
+  - REVISE
+  - BLOCK
+
+## Output Channels
+
+System-19 publishes results through:
+
+- Pull Request comment
+- GitHub status check
+- GitHub step summary
+- JSON audit artifact
+- PR labels
+
+## Current Capabilities
+
+- GitHub-native PR enforcement
+- Config-aware rule engine
+- Strict mode
+- Local fixture runner
+- Audit logging
+- Rule packs
+- OpenClaw/NemoClaw-style artifact adapter
+
+## Rule Packs
+
+System-19 uses modular rule packs:
+
+- Core Pack → engineering safety rules
+- Security Pack → secret exposure detection
+- Performance Pack → large file heuristics
+
+Rule packs are extensible and can evolve into domain-specific enforcement packs.
+
+## Configuration
 
 ```yaml
 criticalPaths:
@@ -68,18 +87,58 @@ strictMode: false
 labels:
   approve: "system-19:approve"
   revise: "system-19:revise"
-  block: "system-19:block"                                                      Local Development                                                               npm install
+  block: "system-19:block"
+
+Local Development
+
+npm install
 npm run build
 npm test
-npm run review:fixture -- safe-refactor.json                                    Output Channels
+npm run review:fixture -- safe-refactor.json
+npm run review:openclaw -- tests/fixtures/openclaw/auth-risk.json
 
-System-19 publishes results through:
-	•	PR comment
-	•	GitHub Check
-	•	GitHub Step Summary
-	•	JSON audit artifact
-	•	PR labels
+GitHub Usage
+
+Use System-19 as a GitHub Action on Pull Requests to publish a review comment, a status check, labels, and an audit artifact.
+
+Adapter Strategy
+
+System-19 is designed to sit above agent runtimes.
+
+That means:
+	•	OpenClaw / NemoClaw execute tasks
+	•	System-19 evaluates task output
+	•	System-19 decides whether changes are safe enough to proceed
+
+Philosophy
+
+System-19 does not trust AI output.
+
+System-19 verifies it.
 
 Status
 
-v0 now includes config-aware enforcement, status checks, audit artifacts, smarter summaries, labels, strict mode, and local fixture review.
+v0 includes:
+	•	config-aware enforcement
+	•	PR status checks
+	•	audit artifacts
+	•	smarter summaries
+	•	decision labels
+	•	strict mode
+	•	local fixture review
+	•	adapter-ready runtime integration
+
+Future Direction
+	•	richer rule packs
+	•	enterprise policy bundles
+	•	runtime adapters beyond OpenClaw
+	•	cross-repo governance
+	•	release gating and deployment policies
+
+Contributing
+
+See CONTRIBUTING.md.
+
+License
+
+MIT

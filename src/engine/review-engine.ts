@@ -4,13 +4,7 @@ import type { Violation } from "../types/violations";
 
 import { defaultConfig } from "../config/defaults";
 import { classifyFiles } from "../parser/classifiers";
-
-import { checkUnsafeTypeScript } from "../rules/rule-unsafe-typescript";
-import { checkDbWithoutMigration } from "../rules/rule-db-without-migration";
-import { checkFailingTests } from "../rules/rule-failing-tests";
-import { checkSensitiveChangeWithoutTests } from "../rules/rule-sensitive-change-without-tests";
-import { checkIncompleteChange } from "../rules/rule-incomplete-change";
-import { checkBreakingRisk } from "../rules/rule-breaking-risk";
+import { getActiveRulePacks } from "../rules/packs/registry";
 
 import { computeQualityScore } from "../analysis/quality";
 import { computeRiskScore } from "../analysis/risk";
@@ -22,14 +16,12 @@ export function runReview(input: ReviewInput): ReviewOutput {
   const config = input.config ?? defaultConfig;
 
   const filteredFiles = input.changedFiles.filter(
-    (file) => !(config.ignoredFiles ?? []).some((pattern) => file.includes(pattern))
+    (file) => !(config.ignoredFiles ?? []).some((p) => file.includes(p))
   );
 
   const filteredPatches = input.filePatches.filter(
-    (item) => !(config.ignoredFiles ?? []).some((pattern) => item.file.includes(pattern))
+    (item) => !(config.ignoredFiles ?? []).some((p) => item.file.includes(p))
   );
-
-  const categories = classifyFiles(filteredFiles, config);
 
   if (filteredFiles.length === 0) {
     return {
@@ -39,29 +31,32 @@ export function runReview(input: ReviewInput): ReviewOutput {
       riskScore: 0,
       confidenceScore: 100,
       violations: [],
-      summary: "System-19 found no actionable files after applying ignore rules.",
+      summary: "No actionable files after ignore rules.",
       requiredActions: []
     };
   }
 
-  const violations: Violation[] = [
-    ...checkUnsafeTypeScript(filteredPatches),
-    ...checkDbWithoutMigration(filteredFiles, config),
-    ...checkFailingTests(input.testResults),
-    ...checkSensitiveChangeWithoutTests(filteredFiles, config),
-    ...checkIncompleteChange(filteredFiles, config),
-    ...checkBreakingRisk(filteredFiles, config)
-  ];
+  classifyFiles(filteredFiles, config);
+
+  const packs = getActiveRulePacks();
+
+  let violations: Violation[] = [];
+
+  for (const pack of packs) {
+    const result = pack.run({
+      ...input,
+      changedFiles: filteredFiles,
+      filePatches: filteredPatches,
+      config
+    });
+    violations.push(...result);
+  }
 
   const qualityScore = computeQualityScore(violations);
   const riskScore = computeRiskScore(violations);
-  const confidenceScore = computeConfidenceScore({
-    ...input,
-    changedFiles: filteredFiles,
-    filePatches: filteredPatches,
-    config
-  });
+  const confidenceScore = computeConfidenceScore(input);
   const blessingScore = computeBlessingScore(qualityScore, confidenceScore, riskScore);
+
   const decision = decide(blessingScore, violations, config);
 
   return {
@@ -71,7 +66,7 @@ export function runReview(input: ReviewInput): ReviewOutput {
     riskScore,
     confidenceScore,
     violations,
-    summary: `System-19 completed PR review for categories: ${categories.join(", ") || "NONE"}.`,
+    summary: `System-19 executed ${packs.length} rule packs.`,
     requiredActions: [...new Set(violations.map((v) => v.suggestedFix))]
   };
 }

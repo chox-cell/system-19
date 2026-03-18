@@ -1,0 +1,23 @@
+{
+  "runtime": "openclaw",
+  "agentName": "coder-agent",
+  "taskId": "task-openclaw-001",
+  "repo": "demo/openclaw-repo",
+  "prNumber": 201,
+  "changedFiles": [
+    "src/auth/session.ts"
+  ],
+  "filePatches": [
+    {
+      "file": "src/auth/session.ts",
+      "patch": "+const token: any = getToken();"
+    }
+  ],
+  "testResults": {
+    "status": "unknown",
+    "summary": "No tests reported"
+  },
+  "metadata": {
+    "source": "openclaw-local"
+  }
+}

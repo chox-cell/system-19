@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "review:fixture": "tsx src/cli/review-fixture.ts"
+    "review:fixture": "tsx src/cli/review-fixture.ts",
+    "review:openclaw": "tsx src/cli/review-openclaw.ts"
   },
   "keywords": [
     "github-action",
