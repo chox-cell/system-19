@@ -8,7 +8,7 @@ export function writeAuditLog(
   sha: string,
   changedFiles: string[],
   output: ReviewOutput
-): void {
+): string {
   const payload = {
     repo,
     prNumber,
@@ -20,6 +20,8 @@ export function writeAuditLog(
     confidenceScore: output.confidenceScore,
     violations: output.violations,
     changedFiles,
+    summary: output.summary,
+    requiredActions: output.requiredActions,
     timestamp: new Date().toISOString()
   };
 
@@ -30,4 +32,5 @@ export function writeAuditLog(
   fs.writeFileSync(filePath, JSON.stringify(payload, null, 2), "utf8");
 
   console.log(`System-19 audit artifact written to ${filePath}`);
+  return filePath;
 }

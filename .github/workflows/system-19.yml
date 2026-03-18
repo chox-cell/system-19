@@ -7,6 +7,7 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  checks: write
 
 jobs:
   review:
@@ -27,8 +28,16 @@ jobs:
         run: npm run build
 
       - name: Run System-19
+        id: system19
         uses: ./
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           test-status: unknown
           comment-mode: pr-comment
+
+      - name: Upload System-19 artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: system-19-audit
+          path: ${{ steps.system19.outputs.artifact-path }}

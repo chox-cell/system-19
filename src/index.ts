@@ -2,9 +2,12 @@ import * as core from "@actions/core";
 import { loadSystem19Config } from "./config/load-config";
 import { getGithubPrContext } from "./github/context";
 import { getPullRequestData } from "./github/pull-request";
+import { postComment } from "./github/comment";
+import { createStatusCheck } from "./github/status-check";
+import { writeStepSummary } from "./github/summary";
+import { exposeArtifactPath } from "./github/artifact";
 import { runReview } from "./engine/review-engine";
 import { buildReport } from "./engine/report-engine";
-import { postComment } from "./github/comment";
 import { writeAuditLog } from "./logging/audit-log";
 
 async function main(): Promise<void> {
@@ -37,13 +40,18 @@ async function main(): Promise<void> {
       console.log(report);
     }
 
-    writeAuditLog(
+    await createStatusCheck(token, prContext, output.decision, output.summary);
+    await writeStepSummary(output);
+
+    const artifactPath = writeAuditLog(
       input.repo,
       input.prNumber,
       prContext.sha,
       input.changedFiles,
       output
     );
+
+    exposeArtifactPath(artifactPath);
 
     console.log("System-19 finished successfully.");
   } catch (error) {

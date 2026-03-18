@@ -11,6 +11,10 @@ System-19 is a GitHub-native enforcement layer for AI-generated software changes
   - APPROVE
   - REVISE
   - BLOCK
+- Publishes a PR comment
+- Publishes a GitHub status check
+- Writes a step summary
+- Generates an audit artifact
 
 ## v0 Scope
 
@@ -27,15 +31,6 @@ System-19 is a GitHub-native enforcement layer for AI-generated software changes
 System-19 does not generate code.
 
 System-19 judges code.
-
-## Planned Checks
-
-- No unsafe TypeScript
-- No DB change without migration
-- No merge if tests fail
-- No sensitive system change without tests
-- No incomplete change
-- No silent breaking risk
 
 ## Config
 
@@ -63,34 +58,16 @@ thresholds:
   revise: 65
 
 ignoredFiles:
-  - "docs/"                                                                     Install
+  - "docs/"                                                                     Output Channels
 
-Add the workflow:                                                               name: System-19 PR Review
+System-19 publishes results through:
+	•	PR comment
+	•	GitHub Check
+	•	GitHub Step Summary
+	•	JSON audit artifact
 
-on:
-  pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
-
-permissions:
-  contents: read
-  pull-requests: write
-
-jobs:
-  review:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm install
-      - run: npm run build
-      - uses: ./
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          test-status: unknown
-          comment-mode: pr-comment                                              Local Development                                                               npm install
+Local Development                                                               npm install
 npm run build
 npm test                                                                        Status
 
-v0 config-aware enforcement is in progress.
+v0 includes config-aware enforcement, status checks, audit artifacts, and smarter summaries.

@@ -15,6 +15,10 @@ inputs:
     required: false
     default: "pr-comment"
 
+outputs:
+  artifact-path:
+    description: "Path to the generated System-19 audit artifact"
+
 runs:
   using: "node20"
   main: "dist/index.js"
