@@ -2,6 +2,9 @@ import type { ReviewInput } from "../types/input";
 import type { ReviewOutput } from "../types/output";
 import type { Violation } from "../types/violations";
 
+import { defaultConfig } from "../config/defaults";
+import { classifyFiles } from "../parser/classifiers";
+
 import { checkUnsafeTypeScript } from "../rules/rule-unsafe-typescript";
 import { checkDbWithoutMigration } from "../rules/rule-db-without-migration";
 import { checkFailingTests } from "../rules/rule-failing-tests";
@@ -16,20 +19,50 @@ import { computeBlessingScore } from "../analysis/scoring";
 import { decide } from "./decision-engine";
 
 export function runReview(input: ReviewInput): ReviewOutput {
+  const config = input.config ?? defaultConfig;
+
+  const filteredFiles = input.changedFiles.filter(
+    (file) => !(config.ignoredFiles ?? []).some((pattern) => file.includes(pattern))
+  );
+
+  const filteredPatches = input.filePatches.filter(
+    (item) => !(config.ignoredFiles ?? []).some((pattern) => item.file.includes(pattern))
+  );
+
+  const categories = classifyFiles(filteredFiles, config);
+
+  if (filteredFiles.length === 0) {
+    return {
+      decision: "APPROVE",
+      blessingScore: 100,
+      qualityScore: 100,
+      riskScore: 0,
+      confidenceScore: 100,
+      violations: [],
+      summary: "System-19 found no actionable files after applying ignore rules.",
+      requiredActions: []
+    };
+  }
+
   const violations: Violation[] = [
-    ...checkUnsafeTypeScript(input.filePatches),
-    ...checkDbWithoutMigration(input.changedFiles),
+    ...checkUnsafeTypeScript(filteredPatches),
+    ...checkDbWithoutMigration(filteredFiles, config),
     ...checkFailingTests(input.testResults),
-    ...checkSensitiveChangeWithoutTests(input.changedFiles),
-    ...checkIncompleteChange(input.changedFiles),
-    ...checkBreakingRisk(input.changedFiles)
+    ...checkSensitiveChangeWithoutTests(filteredFiles, config),
+    ...checkIncompleteChange(filteredFiles, config),
+    ...checkBreakingRisk(filteredFiles, config)
   ];
 
   const qualityScore = computeQualityScore(violations);
   const riskScore = computeRiskScore(violations);
-  const confidenceScore = computeConfidenceScore(input);
+  const confidenceScore = computeConfidenceScore({
+    ...input,
+    changedFiles: filteredFiles,
+    filePatches: filteredPatches,
+    config
+  });
   const blessingScore = computeBlessingScore(qualityScore, confidenceScore, riskScore);
-  const decision = decide(blessingScore, violations);
+  const decision = decide(blessingScore, violations, config);
 
   return {
     decision,
@@ -38,7 +71,7 @@ export function runReview(input: ReviewInput): ReviewOutput {
     riskScore,
     confidenceScore,
     violations,
-    summary: "System-19 completed PR review.",
+    summary: `System-19 completed PR review for categories: ${categories.join(", ") || "NONE"}.`,
     requiredActions: [...new Set(violations.map((v) => v.suggestedFix))]
   };
 }

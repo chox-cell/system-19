@@ -17,6 +17,7 @@ System-19 is a GitHub-native enforcement layer for AI-generated software changes
 - GitHub Action
 - TypeScript-first repositories
 - PR diff analysis
+- Configurable via `.system19.yml`
 - No auto-fix
 - No auto-merge
 - Human remains final authority
@@ -36,12 +37,35 @@ System-19 judges code.
 - No incomplete change
 - No silent breaking risk
 
-## Install
-
-Add the workflow:
+## Config
 
 ```yaml
-name: System-19 PR Review
+criticalPaths:
+  - "src/auth/"
+  - "src/permissions/"
+  - "src/billing/"
+  - "src/middleware/"
+  - "src/api/"
+
+dbPaths:
+  - "prisma/"
+  - "drizzle/"
+  - "migrations/"
+  - "db/"
+
+testPaths:
+  - "__tests__"
+  - ".spec.ts"
+  - ".test.ts"
+
+thresholds:
+  approve: 85
+  revise: 65
+
+ignoredFiles:
+  - "docs/"                                                                     Install
+
+Add the workflow:                                                               name: System-19 PR Review
 
 on:
   pull_request:
@@ -56,25 +80,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-
       - run: npm install
       - run: npm run build
-
       - uses: ./
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           test-status: unknown
           comment-mode: pr-comment                                              Local Development                                                               npm install
 npm run build
-npm test                                                                        Project Structure
-	•	docs/ → strategy and SSOT
-	•	src/ → enforcement engine
-	•	tests/ → fixtures and validation
+npm test                                                                        Status
 
-Status
-
-v0 real GitHub PR integration in progress.
+v0 config-aware enforcement is in progress.

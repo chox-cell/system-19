@@ -1,3 +1,5 @@
+import type { System19Config } from "../config/types";
+
 export interface FilePatch {
   file: string;
   patch: string;
@@ -17,4 +19,5 @@ export interface ReviewInput {
   testResults?: TestResults;
   labels?: string[];
   authorType?: "ai" | "human" | "unknown";
+  config?: System19Config;
 }

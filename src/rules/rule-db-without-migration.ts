@@ -1,10 +1,12 @@
 import type { Violation } from "../types/violations";
+import type { System19Config } from "../config/types";
+import { matchesAnyPath } from "../utils/files";
 
-export function checkDbWithoutMigration(files: string[]): Violation[] {
-  const hasDbChange = files.some((f) =>
-    ["prisma/", "drizzle/", ".sql", "schema.prisma"].some((p) => f.includes(p))
-  );
-
+export function checkDbWithoutMigration(
+  files: string[],
+  config: System19Config
+): Violation[] {
+  const hasDbChange = files.some((f) => matchesAnyPath(f, config.dbPaths));
   const hasMigration = files.some((f) => f.includes("migration"));
 
   if (hasDbChange && !hasMigration) {

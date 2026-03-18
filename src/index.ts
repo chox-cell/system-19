@@ -1,4 +1,5 @@
 import * as core from "@actions/core";
+import { loadSystem19Config } from "./config/load-config";
 import { getGithubPrContext } from "./github/context";
 import { getPullRequestData } from "./github/pull-request";
 import { runReview } from "./engine/review-engine";
@@ -20,10 +21,12 @@ async function main(): Promise<void> {
       throw new Error("Invalid test-status. Use pass | fail | unknown.");
     }
 
+    const config = loadSystem19Config();
     const prContext = getGithubPrContext();
 
     const input = await getPullRequestData(token, prContext);
     input.testResults = { status: testStatusInput };
+    input.config = config;
 
     const output = runReview(input);
     const report = buildReport(output);

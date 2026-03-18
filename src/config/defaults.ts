@@ -1,0 +1,27 @@
+import type { System19Config } from "./types";
+
+export const defaultConfig: System19Config = {
+  criticalPaths: [
+    "src/auth/",
+    "src/permissions/",
+    "src/billing/",
+    "src/middleware/",
+    "src/api/"
+  ],
+  dbPaths: [
+    "prisma/",
+    "drizzle/",
+    "migrations/",
+    "db/"
+  ],
+  testPaths: [
+    "__tests__",
+    ".spec.ts",
+    ".test.ts"
+  ],
+  thresholds: {
+    approve: 85,
+    revise: 65
+  },
+  ignoredFiles: []
+};

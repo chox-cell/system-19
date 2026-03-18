@@ -1,0 +1,39 @@
+{
+  "repo": "local/test-repo",
+  "prNumber": 104,
+  "diff": "FILE: docs/generated.ts\n+const value: any = {};",
+  "changedFiles": [
+    "docs/generated.ts"
+  ],
+  "filePatches": [
+    {
+      "file": "docs/generated.ts",
+      "patch": "+const value: any = {};"
+    }
+  ],
+  "testResults": {
+    "status": "unknown"
+  },
+  "config": {
+    "criticalPaths": [
+      "src/auth/",
+      "src/permissions/"
+    ],
+    "dbPaths": [
+      "prisma/",
+      "drizzle/"
+    ],
+    "testPaths": [
+      "__tests__",
+      ".spec.ts",
+      ".test.ts"
+    ],
+    "thresholds": {
+      "approve": 85,
+      "revise": 65
+    },
+    "ignoredFiles": [
+      "docs/"
+    ]
+  }
+}
