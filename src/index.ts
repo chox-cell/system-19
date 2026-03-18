@@ -6,6 +6,7 @@ import { postComment } from "./github/comment";
 import { createStatusCheck } from "./github/status-check";
 import { writeStepSummary } from "./github/summary";
 import { exposeArtifactPath } from "./github/artifact";
+import { syncDecisionLabel } from "./github/labels";
 import { runReview } from "./engine/review-engine";
 import { buildReport } from "./engine/report-engine";
 import { writeAuditLog } from "./logging/audit-log";
@@ -42,6 +43,7 @@ async function main(): Promise<void> {
 
     await createStatusCheck(token, prContext, output.decision, output.summary);
     await writeStepSummary(output);
+    await syncDecisionLabel(token, prContext, output.decision, config);
 
     const artifactPath = writeAuditLog(
       input.repo,
@@ -52,6 +54,11 @@ async function main(): Promise<void> {
     );
 
     exposeArtifactPath(artifactPath);
+
+    if (config.strictMode && output.decision === "BLOCK") {
+      core.setFailed("System-19 strict mode blocked this PR.");
+      return;
+    }
 
     console.log("System-19 finished successfully.");
   } catch (error) {

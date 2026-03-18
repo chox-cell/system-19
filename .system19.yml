@@ -19,3 +19,13 @@ testPaths:
 thresholds:
   approve: 85
   revise: 65
+
+ignoredFiles:
+  - "docs/"
+
+strictMode: false
+
+labels:
+  approve: "system-19:approve"
+  revise: "system-19:revise"
+  block: "system-19:block"

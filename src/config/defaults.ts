@@ -23,5 +23,11 @@ export const defaultConfig: System19Config = {
     approve: 85,
     revise: 65
   },
-  ignoredFiles: []
+  ignoredFiles: [],
+  strictMode: false,
+  labels: {
+    approve: "system-19:approve",
+    revise: "system-19:revise",
+    block: "system-19:block"
+  }
 };

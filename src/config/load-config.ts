@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import YAML from "yaml";
 import { defaultConfig } from "./defaults";
+import { validateSystem19Config } from "./validate-config";
 import type { System19Config } from "./types";
 
 function mergeConfig(partial: Partial<System19Config>): System19Config {
@@ -13,7 +14,13 @@ function mergeConfig(partial: Partial<System19Config>): System19Config {
       approve: partial.thresholds?.approve ?? defaultConfig.thresholds.approve,
       revise: partial.thresholds?.revise ?? defaultConfig.thresholds.revise
     },
-    ignoredFiles: partial.ignoredFiles ?? defaultConfig.ignoredFiles
+    ignoredFiles: partial.ignoredFiles ?? defaultConfig.ignoredFiles,
+    strictMode: partial.strictMode ?? defaultConfig.strictMode,
+    labels: {
+      approve: partial.labels?.approve ?? defaultConfig.labels!.approve,
+      revise: partial.labels?.revise ?? defaultConfig.labels!.revise,
+      block: partial.labels?.block ?? defaultConfig.labels!.block
+    }
   };
 }
 
@@ -21,15 +28,15 @@ export function loadSystem19Config(): System19Config {
   const configPath = path.join(process.cwd(), ".system19.yml");
 
   if (!fs.existsSync(configPath)) {
+    validateSystem19Config(defaultConfig);
     return defaultConfig;
   }
 
   const raw = fs.readFileSync(configPath, "utf8");
   const parsed = YAML.parse(raw) as Partial<System19Config> | null;
 
-  if (!parsed) {
-    return defaultConfig;
-  }
+  const config = parsed ? mergeConfig(parsed) : defaultConfig;
+  validateSystem19Config(config);
 
-  return mergeConfig(parsed);
+  return config;
 }

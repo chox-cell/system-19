@@ -15,6 +15,8 @@ System-19 is a GitHub-native enforcement layer for AI-generated software changes
 - Publishes a GitHub status check
 - Writes a step summary
 - Generates an audit artifact
+- Syncs PR labels by decision
+- Supports strict mode for blocking workflows
 
 ## v0 Scope
 
@@ -22,6 +24,7 @@ System-19 is a GitHub-native enforcement layer for AI-generated software changes
 - TypeScript-first repositories
 - PR diff analysis
 - Configurable via `.system19.yml`
+- Local fixture-based review runner
 - No auto-fix
 - No auto-merge
 - Human remains final authority
@@ -58,16 +61,25 @@ thresholds:
   revise: 65
 
 ignoredFiles:
-  - "docs/"                                                                     Output Channels
+  - "docs/"
+
+strictMode: false
+
+labels:
+  approve: "system-19:approve"
+  revise: "system-19:revise"
+  block: "system-19:block"                                                      Local Development                                                               npm install
+npm run build
+npm test
+npm run review:fixture -- safe-refactor.json                                    Output Channels
 
 System-19 publishes results through:
 	•	PR comment
 	•	GitHub Check
 	•	GitHub Step Summary
 	•	JSON audit artifact
+	•	PR labels
 
-Local Development                                                               npm install
-npm run build
-npm test                                                                        Status
+Status
 
-v0 includes config-aware enforcement, status checks, audit artifacts, and smarter summaries.
+v0 now includes config-aware enforcement, status checks, audit artifacts, smarter summaries, labels, strict mode, and local fixture review.
