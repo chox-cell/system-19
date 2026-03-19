@@ -1,0 +1,24 @@
+{
+  "runtime": "crewai",
+  "crewName": "security-crew",
+  "agentName": "coder-agent",
+  "taskId": "task-crewai-001",
+  "repo": "demo/crewai-repo",
+  "prNumber": 501,
+  "changedFiles": [
+    "src/permissions/roles.ts"
+  ],
+  "filePatches": [
+    {
+      "file": "src/permissions/roles.ts",
+      "patch": "+export function allowAll(user: any) { return true; }"
+    }
+  ],
+  "testResults": {
+    "status": "unknown",
+    "summary": "No tests reported"
+  },
+  "metadata": {
+    "source": "crewai-local"
+  }
+}

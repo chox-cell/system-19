@@ -1,0 +1,24 @@
+{
+  "runtime": "autogen",
+  "teamName": "payments-team",
+  "agentName": "coder-agent",
+  "taskId": "task-autogen-001",
+  "repo": "demo/autogen-repo",
+  "prNumber": 401,
+  "changedFiles": [
+    "src/billing/checkout.ts"
+  ],
+  "filePatches": [
+    {
+      "file": "src/billing/checkout.ts",
+      "patch": "+export async function checkout(input: any) { return provider.charge(input); }"
+    }
+  ],
+  "testResults": {
+    "status": "unknown",
+    "summary": "No tests reported"
+  },
+  "metadata": {
+    "source": "autogen-local"
+  }
+}

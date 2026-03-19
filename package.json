@@ -12,7 +12,10 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "review:fixture": "tsx src/cli/review-fixture.ts",
-    "review:openclaw": "tsx src/cli/review-openclaw.ts"
+    "review:openclaw": "tsx src/cli/review-openclaw.ts",
+    "review:langgraph": "tsx src/cli/review-langgraph.ts",
+    "review:autogen": "tsx src/cli/review-autogen.ts",
+    "review:crewai": "tsx src/cli/review-crewai.ts"
   },
   "keywords": [
     "github-action",

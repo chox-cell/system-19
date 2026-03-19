@@ -1,0 +1,24 @@
+{
+  "runtime": "langgraph",
+  "graphName": "shipping-flow",
+  "nodeName": "coder-node",
+  "taskId": "task-langgraph-001",
+  "repo": "demo/langgraph-repo",
+  "prNumber": 301,
+  "changedFiles": [
+    "src/api/orders.ts"
+  ],
+  "filePatches": [
+    {
+      "file": "src/api/orders.ts",
+      "patch": "+export async function createOrder(input: any) { return db.order.create({ data: input }); }"
+    }
+  ],
+  "testResults": {
+    "status": "unknown",
+    "summary": "No tests reported"
+  },
+  "metadata": {
+    "source": "langgraph-local"
+  }
+}

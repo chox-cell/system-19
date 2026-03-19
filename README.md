@@ -42,7 +42,12 @@ System-19 publishes results through:
 - Local fixture runner
 - Audit logging
 - Rule packs
-- OpenClaw/NemoClaw-style artifact adapter
+- Generic adapter base
+- Adapter SDK
+- OpenClaw-style runtime adapter
+- LangGraph runtime adapter
+- AutoGen runtime adapter
+- CrewAI runtime adapter
 
 ## Rule Packs
 
@@ -87,17 +92,14 @@ strictMode: false
 labels:
   approve: "system-19:approve"
   revise: "system-19:revise"
-  block: "system-19:block"
-
-Local Development
-
-npm install
+  block: "system-19:block"                                                      Local Development                                                               npm install
 npm run build
 npm test
 npm run review:fixture -- safe-refactor.json
 npm run review:openclaw -- tests/fixtures/openclaw/auth-risk.json
-
-GitHub Usage
+npm run review:langgraph -- tests/fixtures/langgraph/api-risk.json
+npm run review:autogen -- tests/fixtures/autogen/payment-risk.json
+npm run review:crewai -- tests/fixtures/crewai/authz-risk.json                  GitHub Usage
 
 Use System-19 as a GitHub Action on Pull Requests to publish a review comment, a status check, labels, and an audit artifact.
 
@@ -107,8 +109,17 @@ System-19 is designed to sit above agent runtimes.
 
 That means:
 	•	OpenClaw / NemoClaw execute tasks
+	•	LangGraph orchestrates graph-based flows
+	•	AutoGen coordinates agent teams
+	•	CrewAI coordinates specialized crews
 	•	System-19 evaluates task output
 	•	System-19 decides whether changes are safe enough to proceed
+
+Adapter SDK
+
+See:
+	•	docs/sdk/adapter-sdk.md
+	•	docs/contracts/
 
 Philosophy
 
@@ -126,18 +137,27 @@ v0 includes:
 	•	decision labels
 	•	strict mode
 	•	local fixture review
-	•	adapter-ready runtime integration
+	•	runtime adapter integration
+	•	adapter SDK
+	•	publish-ready OSS structure
 
 Future Direction
 	•	richer rule packs
 	•	enterprise policy bundles
-	•	runtime adapters beyond OpenClaw
 	•	cross-repo governance
 	•	release gating and deployment policies
 
 Contributing
 
 See CONTRIBUTING.md.
+
+Security
+
+See SECURITY.md.
+
+Support
+
+See SUPPORT.md.
 
 License
 
