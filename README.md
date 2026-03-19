@@ -1,5 +1,9 @@
 # System-19
 
+![CI](https://github.com/chox-cell/system-19/actions/workflows/release-oss.yml/badge.svg)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
+![Version](https://img.shields.io/badge/version-v0.1.0-blue)
+
 System-19 is an open-source enforcement layer for AI-generated software changes.
 
 It runs inside GitHub Pull Requests and can also evaluate external agent-runtime artifacts, helping teams stop unsafe or low-quality changes before merge or release.
@@ -59,9 +63,33 @@ System-19 uses modular rule packs:
 
 Rule packs are extensible and can evolve into domain-specific enforcement packs.
 
-## Configuration
+## Quick Start
 
-```yaml
+~~~bash
+npm install
+npm run build
+npm test
+npm run review:fixture -- safe-refactor.json
+
+Why System-19
+
+AI coding tools can generate useful changes quickly, but they can also introduce:
+	•	unsafe typing
+	•	missing tests
+	•	breaking changes
+	•	risky auth or billing changes
+
+System-19 adds a deterministic enforcement layer before merge or release.
+
+Supported Runtimes
+	•	GitHub Pull Requests
+	•	OpenClaw-style artifacts
+	•	LangGraph artifacts
+	•	AutoGen artifacts
+	•	CrewAI artifacts
+
+Configuration
+
 criticalPaths:
   - "src/auth/"
   - "src/permissions/"
@@ -92,14 +120,20 @@ strictMode: false
 labels:
   approve: "system-19:approve"
   revise: "system-19:revise"
-  block: "system-19:block"                                                      Local Development                                                               npm install
+  block: "system-19:block"
+
+Local Development
+
+npm install
 npm run build
 npm test
 npm run review:fixture -- safe-refactor.json
 npm run review:openclaw -- tests/fixtures/openclaw/auth-risk.json
 npm run review:langgraph -- tests/fixtures/langgraph/api-risk.json
 npm run review:autogen -- tests/fixtures/autogen/payment-risk.json
-npm run review:crewai -- tests/fixtures/crewai/authz-risk.json                  GitHub Usage
+npm run review:crewai -- tests/fixtures/crewai/authz-risk.json
+
+GitHub Usage
 
 Use System-19 as a GitHub Action on Pull Requests to publish a review comment, a status check, labels, and an audit artifact.
 
@@ -120,6 +154,14 @@ Adapter SDK
 See:
 	•	docs/sdk/adapter-sdk.md
 	•	docs/contracts/
+
+Screenshots
+
+PR Review Comment
+
+Status Check
+
+Runtime Review CLI
 
 Philosophy
 
