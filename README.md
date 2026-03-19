@@ -65,7 +65,7 @@ Rule packs are extensible and can evolve into domain-specific enforcement packs.
 
 ## Quick Start
 
-~~~bash
+```bash
 npm install
 npm run build
 npm test
